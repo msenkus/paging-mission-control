@@ -11,9 +11,9 @@ public class Main {
     public static void main(String[] args) {
 
         String[] splitCurrentLine;
-        ArrayList<Map<String, String>> TSTAT = new ArrayList<>();
-        ArrayList<Map<String, String>> BATT = new ArrayList<>();
-        ArrayList<Map<String, String>> alertList = new ArrayList<>();
+        List<Map<String, String>> TSTAT = new ArrayList<>();
+        List<Map<String, String>> BATT = new ArrayList<>();
+        List<Map<String, String>> alertList = new ArrayList<>();
 
         InputStream inputStream = new InputStream();
         String currentLine = inputStream.nextLine();
@@ -52,7 +52,7 @@ public class Main {
         boolean BATT = false;
         boolean TSTAT = false;
         String alertLevel = "";
-        Map<String, String> status= new HashMap<>();
+        Map<String, String> status= new LinkedHashMap<>();
 
         double measurement = Double.parseDouble(input[input.length - 2]);
         double redLowLimit = Double.parseDouble(input[input.length - 3]);
@@ -78,7 +78,7 @@ public class Main {
             else if(measurement <= yellowLowLimit ) alertLevel = "yellow-low-limit";
             else if(measurement <= yellowHighLimit) alertLevel = "yellow-high-limit";
             else if(measurement <= redHighLimit) alertLevel = "red-high-limit";
-            else System.out.println("");
+            else System.out.println("Error: Check battery");
         }
 
         status.put("satelliteId", input[1]);
@@ -88,7 +88,7 @@ public class Main {
         return status;
     }
 
-    public static void sortComponent(Map<String, String> status, ArrayList<Map<String,String>> TSTAT, ArrayList<Map<String,String>> BATT){
+    public static void sortComponent(Map<String, String> status, List<Map<String,String>> TSTAT, List<Map<String,String>> BATT){
         if(status.containsValue("TSTAT")){
             TSTAT.add(status);
         }
@@ -97,7 +97,7 @@ public class Main {
         }
     }
 
-    public static void checkTime(ArrayList<Map<String, String>> log){
+    public static void checkTime(List<Map<String, String>> log){
         //Check if log is empty
         if(log.isEmpty()) return;
         //Get the Most recent time entry from the log.
@@ -118,15 +118,15 @@ public class Main {
         }
     }
 
-    public static ArrayList<Map<String, String>> alert(ArrayList<Map<String, String>> log){
+    public static List<Map<String, String>> alert(List<Map<String, String>> log){
         //Group entrants by satelliteId.
         Map<String, List<Map<String, String>>> groupedID = log.stream().collect(Collectors.groupingBy(stringStringMap -> stringStringMap.get("satelliteId")));
         //Return list
-        ArrayList<Map<String, String>> alertList = new ArrayList<>();
+        List<Map<String, String>> alertList = new ArrayList<>();
         //Check each satellite by ID.
         for(Map.Entry<String, List<Map<String, String>>> entry : groupedID.entrySet()){
             //Bucket to hold Red alerts.
-            ArrayList<Map<String, String>> limitCount = new ArrayList<>();
+            List<Map<String, String>> limitCount = new ArrayList<>();
             entry.getValue().forEach(map -> {
                 if(map.get("severity").equals("red-high-limit") && map.get("component").equals("TSTAT")){
                     limitCount.add(map);
