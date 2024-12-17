@@ -138,8 +138,6 @@ public class Main {
         }
         return alertList;
     }
-
-
 }
 
     /*
