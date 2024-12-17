@@ -1,8 +1,6 @@
 package org.example;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
