@@ -116,8 +116,6 @@ public class Main {
                 log.remove(x);
             }
         }
-
-
     }
 
     public static ArrayList<Map<String, String>> alert(ArrayList<Map<String, String>> log){
